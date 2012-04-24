@@ -2,6 +2,7 @@ import pycassa
 import time
 import datetime
 import json
+import uuid
 
 KEYSPACE = "perfbucket"
 
@@ -34,18 +35,20 @@ def get_time_uuids(now=None):
     
     return result
     
-def get_worst(timestamp, minimum_ms=5000):
+def get_worst(timestamp, minimum=5000000, max_count=100):
     pool = _get_cassandra_connection()
     data_cf = pycassa.ColumnFamily(pool, "profiling_data")
     metadata_cf = pycassa.ColumnFamily(pool, "profiling_metadata")
     worst_cf = pycassa.ColumnFamily(pool, "profiling_worst_by_hour")
 
-    minimum_column = (minimum_ms * 1000, "")
+    minimum_column = (minimum, "")
     hour_uuid = get_time_uuids(timestamp)["hour"]
     
     results = {}
     try:
-        results = worst_cf.get(hour_uuid, column_finish=minimum_column, column_count=100)
+        results = _unjsonify(worst_cf.get(hour_uuid, column_finish=minimum_column, column_count=max_count))
+        for name, value in results.iteritems():
+            results[name]["run_uuid"] = uuid.UUID(value["run_uuid"])
     except pycassa.cassandra.ttypes.NotFoundException:
         pass
     
@@ -61,6 +64,12 @@ def get_profiling_details(run_uuid):
     
     return {"data": data, "metadata": metadata}
 
+def get_page_from_metadata(metadata):
+    return "{0}?{1}".format(metadata["SERVER"]["SCRIPT_NAME"], metadata["SERVER"]["QUERY_STRING"])
+
+def get_duration_from_data(data):
+    return int(data["main()"]["wt"])
+
 def save_profiling_result(data, metadata):
     pool = _get_cassandra_connection()
     data_cf = pycassa.ColumnFamily(pool, "profiling_data")
@@ -71,6 +80,9 @@ def save_profiling_result(data, metadata):
     data_cf.insert(uuids["unique"], _jsonify(data))
     metadata_cf.insert(uuids["unique"], _jsonify(metadata))
 
-    duration = int(data["main()"]["wt"])
-    worst_data = {(duration, str(uuids["unique"])): uuids["unique"]}
-    worst_cf.insert(uuids["hour"], worst_data)
+    duration = get_duration_from_data(data)
+    value = {"run_uuid": str(uuids["unique"]),
+             "page": get_page_from_metadata(metadata),
+             "duration": duration}
+    worst_data = {(duration, str(uuids["unique"])): value}
+    worst_cf.insert(uuids["hour"], _jsonify(worst_data))

@@ -57,7 +57,7 @@ def install(keyspace_name, update=False, drop_first=False, rf=1):
     _create_cf(sm, keyspace_name, "profiling_worst_by_hour",
                comparator_type=t,
                key_validation_class=pycassa.types.TimeUUIDType(),
-               default_validation_class=pycassa.types.TimeUUIDType())
+               default_validation_class=pycassa.types.UTF8Type())
 
 if __name__ == '__main__':
     install(storage.KEYSPACE, drop_first=True)
