@@ -30,7 +30,7 @@
 
         yum upgrade -y
         yum install -y httpd mysql mysql-server php php-mysql php-devel php-pear php-pecl-apc apache-cassandra1 python-pip gcc python-devel git
-        pip-python install pycassa pyinotify graphviz
+        pip-python install pycassa pyinotify graphviz phpserialize
         pecl install channel://pecl.php.net/xhprof-0.9.2
         echo "extension=xhprof.so" > /etc/php.d/xhprof.ini
         systemctl enable httpd.service mysqld.service cassandra.service perfbucket-watcher.service
