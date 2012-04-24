@@ -16,10 +16,12 @@ def print_hour(timestamp):
 
 # All paths slower than "N" (5000 milliseconds)
 
-def hourly_report(begin=None):
+def slowest_requests_by_hour(begin=None, hours=24):
+    print("Slowest Requests by Hour")
+  
     if begin is None:
         begin = time.time()
-    for hours_ago in range(0, 24):
+    for hours_ago in range(0, hours):
         timestamp = begin - hours_ago * 60 * 60
         print_hour(timestamp)
         results = storage.get_worst(timestamp)
@@ -30,7 +32,11 @@ def hourly_report(begin=None):
 
 # Top 20 slowest by average wall time (weighted by popularity?)
 
-
+def slowest_pages_on_average():
+    print("Slowest Pages on Average")
+    
 
 if __name__ == '__main__':
-    hourly_report()
+    slowest_requests_by_hour()
+    print("")
+    slowest_pages_on_average()

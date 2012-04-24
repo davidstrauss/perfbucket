@@ -9,7 +9,6 @@ class ProcessProfilerEvent(pyinotify.ProcessEvent):
     def process_IN_CLOSE_WRITE(self, event):
         if event.name.endswith(".json"):
             base = os.path.splitext(os.path.join(event.path, event.name))[0]
-            print "Closed: %s" %  base
             analyzer.analyze_profiling_result(base)
 
 def monitor(directory):
