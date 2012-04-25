@@ -25,7 +25,7 @@ exec="/usr/bin/perfbucket watch"
 prog="perfbucket-watcher"
 runuser="apache"
 pid_file="/var/run/perfbucket-watcher.pid"
-pid=`ps ax | grep python26 | grep "perfbucket watch" | awk {'print $1'}`
+pid=`ps ax | grep sudo | grep "perfbucket watch" | awk {'print $1'}`
 
 [ -e /etc/sysconfig/$prog ] && . /etc/sysconfig/$prog
 
@@ -36,7 +36,7 @@ start() {
     [ -d $dumppath ] || exit 5
     echo -n $"Starting $prog: "
     # if not running, start it up here, usually something like "daemon $exec"
-    su -p -s /bin/sh $runuser -c "python26 $exec $dumppath" > /dev/null 2>&1 &
+    sudo -u $runuser $exec $dumppath > /dev/null 2>&1 &
     retval=$?
     echo
     [ $retval -eq 0 ] && touch $lockfile && echo $!>$pid_file && echo_success
