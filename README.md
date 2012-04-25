@@ -26,15 +26,18 @@
         [Install]
         WantedBy=multi-user.target
 
-1. Finish setup:
+1. Set up the Python side:
 
-        yum upgrade -y
-        yum install -y httpd mysql mysql-server php php-mysql php-devel php-pear php-pecl-apc
         yum install -y apache-cassandra1 python-pip gcc python-devel git
         pip-python install git+http://github.com/davidstrauss/perfbucket.git#egg=perfbucket
+        systemctl enable cassandra.service perfbucket-watcher.service
+
+1. Set up the PHP side:
+
+        yum install -y httpd mysql mysql-server php php-mysql php-devel php-pear php-pecl-apc
         pecl install channel://pecl.php.net/xhprof-0.9.2
         echo "extension=xhprof.so" > /etc/php.d/xhprof.ini
-        systemctl enable httpd.service mysqld.service cassandra.service perfbucket-watcher.service
+        systemctl enable httpd.service mysqld.service
 
 1. Ensure all the updates take effect:
 
