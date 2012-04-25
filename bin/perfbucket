@@ -1,0 +1,21 @@
+#!/usr/bin/env python
+
+from perfbucket import watcher, schema, export_for_xhprof, reporting, storage
+import sys
+
+if __name__ == '__main__':
+    verb = sys.argv[1]
+    if verb == "watch":
+        path = sys.argv[2]
+        watcher.monitor(path)
+    elif verb == "export":
+        request_uuid = sys.argv[2]
+        print(export_for_xhprof.get_xhprof_data(request_uuid))
+    elif verb == "init":
+        schema.install(storage.KEYSPACE, drop_first=True)
+    elif verb == "show":
+        topic = sys.argv[2]
+        if topic == "requests":
+            reporting.slowest_requests_by_hour()
+        elif topic == "pages":
+            reporting.slowest_pages_on_average_by_hour()

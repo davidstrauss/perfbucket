@@ -21,9 +21,9 @@
 . /etc/rc.d/init.d/functions
 
 dumppath="/var/tmp/perfbucket"
-exec="/usr/bin/perfbucket-watcher"
+exec="/usr/bin/perfbucket watch"
 prog="perfbucket-watcher"
-runuser="nobody"
+runuser="apache"
 pid_file="/var/run/perfbucket-watcher.pid"
 pid=`ps ax | grep python26 | grep watcher.py | awk {'print $1'}`
 
