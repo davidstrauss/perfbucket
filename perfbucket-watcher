@@ -23,7 +23,7 @@
 dumppath="/tmp/xhprof-dumps/"
 exec="/opt/perfbucket/watcher.py"
 prog="perfbucket-watcher"
-apacheuser="wwdata:wwwdata"
+apacheuser="wwwdata:wwwdata"
 runuser="nobody"
 pid_file="/var/run/perfbucket-watcher.pid"
 pid=`ps ax | grep python26 | grep watcher.py | awk {'print $1'}`
