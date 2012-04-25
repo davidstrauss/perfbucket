@@ -20,33 +20,35 @@
 # Source function library.
 . /etc/rc.d/init.d/functions
 
-dumppath="/var/tmp/perfbucket/"
+dumppath="/var/tmp/perfbucket"
 exec="/opt/perfbucket/watcher.py"
 prog="perfbucket-watcher"
-apacheuser="wwdata:wwwdata"
-#config="<path to major config file>"
+apacheuser="wwwdata:wwwdata"
+runuser="nobody"
+pid_file="/var/run/perfbucket-watcher.pid"
+pid=`ps ax | grep python26 | grep watcher.py | awk {'print $1'}`
 
 [ -e /etc/sysconfig/$prog ] && . /etc/sysconfig/$prog
 
 lockfile=/var/lock/subsys/$prog
 
 start() {
-    [ -x $exec ] || exit 5
-    #[ -f $config ] || exit 6
+    [ -f $exec ] || exit 5
     # ensure dumppath exists
-    [ -d $dumppath ] || mkdir $dumppath && chown $apacheuser $dumppath
+    [ -d $dumppath ] || exit 5
     echo -n $"Starting $prog: "
     # if not running, start it up here, usually something like "daemon $exec"
-    daemon python26 $exec $dumppath
+    su -p -s /bin/sh $runuser -c "python26 $exec $dumppath" > /dev/null 2>&1 &
     retval=$?
     echo
-    [ $retval -eq 0 ] && touch $lockfile
+    [ $retval -eq 0 ] && touch $lockfile && echo $!>$pid_file && echo_success
     return $retval
 }
 
 stop() {
     echo -n $"Stopping $prog: "
     # stop it here, often "killproc $prog"
+    [[ $pid != "" ]] && success && kill $pid || failure
     retval=$?
     echo
     [ $retval -eq 0 ] && rm -f $lockfile

@@ -8,6 +8,6 @@ if function_exists('xhprof_disable') {
   $run_id = $xhprof_runs->save_run($xhprof_data, 'xhprof_testing');
 
   $data = array('SERVER' => $_SERVER);
-  file_put_contents('/tmp/' . $run_id . '.json', json_encode($data));
+  file_put_contents('/var/tmp/perfbucket/' . $run_id . '.json', json_encode($data));
 }
 
