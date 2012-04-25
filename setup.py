@@ -7,7 +7,7 @@ setup(name='perfbucket',
       maintainer_email = 'david@davidstrauss.net',
       url = 'http://github.com/davidstrauss/perfbucket',
       install_requires = ['pycassa', 'phpserialize', 'pyinotify'],
-      packages=['perfbucket'],
-      data_files=[('/etc/init.d', ['perfbucket-watcher'])],
-      scripts['bin/perfbucket-watcher']
+      packages = ['perfbucket'],
+      data_files = [('/etc/init.d', ['perfbucket-watcher'])],
+      scripts = ['bin/perfbucket-watcher']
       )
