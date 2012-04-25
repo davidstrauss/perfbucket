@@ -6,6 +6,6 @@ setup(name='perfbucket',
       maintainer = 'David Strauss',
       maintainer_email = 'david@davidstrauss.net',
       url = 'http://github.com/davidstrauss/perfbucket',
-      install_requires = ['pycassa', 'phpserialize'],
+      install_requires = ['pycassa', 'phpserialize', 'pyinotify'],
       packages=['perfbucket'],
       )
