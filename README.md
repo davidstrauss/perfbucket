@@ -33,6 +33,8 @@
         systemctl enable cassandra.service perfbucket-watcher.service
         systemctl start cassandra.service perfbucket-watcher.service
 
+1. Use schema.py in the installed package to configure Cassandra.
+
 1. Set up the PHP side:
 
         yum install -y httpd mysql mysql-server php php-mysql php-devel php-pear php-pecl-apc
