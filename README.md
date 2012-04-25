@@ -40,3 +40,5 @@
         echo "extension=xhprof.so" > /etc/php.d/xhprof.ini
         systemctl enable httpd.service mysqld.service
         systemctl start httpd.service mysqld.service
+
+1. Use the files in the "php" directory as a guide for having all PHP runs send profiling information to perfbucket.
