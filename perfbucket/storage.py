@@ -35,7 +35,7 @@ def get_time_uuids(now=None):
     
     return result
     
-def get_worst(timestamp, minimum=5000000, max_count=100):
+def get_worst(timestamp, minimum=1000000, max_count=100):
     pool = _get_cassandra_connection()
     data_cf = pycassa.ColumnFamily(pool, "profiling_data")
     metadata_cf = pycassa.ColumnFamily(pool, "profiling_metadata")
