@@ -32,7 +32,6 @@ pid=`ps ax | grep python26 | grep watcher.py | awk {'print $1'}`
 lockfile=/var/lock/subsys/$prog
 
 start() {
-    [ -f $exec ] || exit 5
     # ensure dumppath exists
     [ -d $dumppath ] || exit 5
     echo -n $"Starting $prog: "
