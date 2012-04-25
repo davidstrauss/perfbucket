@@ -19,8 +19,8 @@ def slowest_requests_by_hour(begin=None, hours=24):
         print_hour(timestamp)
         results = storage.get_worst(timestamp)
         for name, value in results.iteritems():
-            run_uuid = value["run_uuid"]
-            print("  Run ID: %s" % run_uuid)
+            request_uuid = value["request_uuid"]
+            print("  Request UUID: %s" % request_uuid)
             print("    Duration: {0} milliseconds".format(value["duration"] / 1000))
             print("    Page: {0}".format(value["page"]))
 
@@ -30,9 +30,11 @@ def _slowest_pages_on_average_for_hour(timestamp, top=50):
     pages = {}
     results = storage.get_worst(timestamp, max_count=10000)
     for name, value in results.iteritems():
-        current = pages.get(value["page"], {"count": 0, "duration": 0})
+        current = pages.get(value["page"], {"count": 0, "duration": 0, "requests": {}})
+        current["requests"][value["duration"]] = str(value["request_uuid"])
         pages[value["page"]] = {"count": current["count"] + 1,
-                                "duration": current["count"] + value["duration"]}
+                                "duration": current["count"] + value["duration"],
+                                "requests": current["requests"]}
                                     
     ordered_pages = {}
     for page, data in pages.iteritems():
@@ -45,9 +47,18 @@ def _slowest_pages_on_average_for_hour(timestamp, top=50):
         print("  Page: {0}".format(page))
         print("    Count: {0}".format(value["count"]))
         print("    Average duration: {0} milliseconds".format(average_duration / 1000))
+        print("    Worst requests (showing up to ten):")
+        
+        requests_displayed = 0
+        for duration in reversed(sorted(value["requests"].keys())):
+            print("      {0}".format(value["requests"][duration]))
+            requests_displayed += 1
+            if requests_displayed == 10:
+                break
+        
         displayed += 1
         if displayed == top:
-            return
+            break
 
 def slowest_pages_on_average_by_hour(begin=None, hours=24, top=50):
     print("Slowest Pages on Average by Hour")

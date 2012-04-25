@@ -48,19 +48,19 @@ def get_worst(timestamp, minimum=5000000, max_count=100):
     try:
         results = _unjsonify(worst_cf.get(hour_uuid, column_finish=minimum_column, column_count=max_count))
         for name, value in results.iteritems():
-            results[name]["run_uuid"] = uuid.UUID(value["run_uuid"])
+            results[name]["request_uuid"] = uuid.UUID(value["request_uuid"])
     except pycassa.cassandra.ttypes.NotFoundException:
         pass
     
     return results
     
-def get_profiling_details(run_uuid):
+def get_profiling_details(request_uuid):
     pool = _get_cassandra_connection()
     data_cf = pycassa.ColumnFamily(pool, "profiling_data")
     metadata_cf = pycassa.ColumnFamily(pool, "profiling_metadata")
     
-    data = dict(_unjsonify(data_cf.get(run_uuid)))
-    metadata = dict(_unjsonify(metadata_cf.get(run_uuid)))
+    data = dict(_unjsonify(data_cf.get(request_uuid)))
+    metadata = dict(_unjsonify(metadata_cf.get(request_uuid)))
     
     return {"data": data, "metadata": metadata}
 
@@ -81,7 +81,7 @@ def save_profiling_result(data, metadata):
     metadata_cf.insert(uuids["unique"], _jsonify(metadata))
 
     duration = get_duration_from_data(data)
-    value = {"run_uuid": str(uuids["unique"]),
+    value = {"request_uuid": str(uuids["unique"]),
              "page": get_page_from_metadata(metadata),
              "duration": duration}
     worst_data = {(duration, str(uuids["unique"])): value}
