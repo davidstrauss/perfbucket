@@ -19,7 +19,7 @@
         TimeoutSec=90s
         User=apache
         Group=apache
-        ExecStart=/usr/bin/python /opt/perfbucket/watcher.py /var/tmp/perfbucket
+        ExecStart=/usr/bin/perfbucket-watcher /var/tmp/perfbucket
         Restart=on-failure
         RestartSec=5min
 
