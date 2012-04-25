@@ -3,8 +3,6 @@ import sys
 import pyinotify
 import analyzer
 
-wm = pyinotify.WatchManager()
-
 class ProcessProfilerEvent(pyinotify.ProcessEvent):
     def process_IN_CLOSE_WRITE(self, event):
         if event.name.endswith(".json"):
@@ -12,6 +10,7 @@ class ProcessProfilerEvent(pyinotify.ProcessEvent):
             analyzer.analyze_profiling_result(base)
 
 def monitor(directory):
+    wm = pyinotify.WatchManager()
     notifier = pyinotify.Notifier(wm, ProcessProfilerEvent())
     mask = pyinotify.IN_CLOSE_WRITE  # Watched events
     wdd = wm.add_watch(directory, mask)
