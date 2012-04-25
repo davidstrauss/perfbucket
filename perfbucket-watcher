@@ -20,7 +20,7 @@
 # Source function library.
 . /etc/rc.d/init.d/functions
 
-dumppath="/tmp/xhprof-dumps/"
+dumppath="/var/tmp/perfbucket"
 exec="/opt/perfbucket/watcher.py"
 prog="perfbucket-watcher"
 apacheuser="wwwdata:wwwdata"
@@ -35,7 +35,7 @@ lockfile=/var/lock/subsys/$prog
 start() {
     [ -f $exec ] || exit 5
     # ensure dumppath exists
-    [ -d $dumppath ] || mkdir $dumppath; chown $apacheuser $dumppath
+    [ -d $dumppath ] || exit 5
     echo -n $"Starting $prog: "
     # if not running, start it up here, usually something like "daemon $exec"
     su -p -s /bin/sh $runuser -c "python26 $exec $dumppath" > /dev/null 2>&1 &
