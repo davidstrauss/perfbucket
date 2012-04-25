@@ -20,7 +20,7 @@
 # Source function library.
 . /etc/rc.d/init.d/functions
 
-dumppath="/tmp/xhprof-dumps/"
+dumppath="/var/tmp/perfbucket/"
 exec="/opt/perfbucket/watcher.py"
 prog="perfbucket-watcher"
 apacheuser="wwdata:wwwdata"
