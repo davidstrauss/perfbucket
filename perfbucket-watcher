@@ -23,6 +23,7 @@
 dumppath="/tmp/xhprof-dumps/"
 exec="/opt/perfbucket/watcher.py"
 prog="perfbucket-watcher"
+apacheuser="wwdata:wwwdata"
 #config="<path to major config file>"
 
 [ -e /etc/sysconfig/$prog ] && . /etc/sysconfig/$prog
@@ -32,6 +33,8 @@ lockfile=/var/lock/subsys/$prog
 start() {
     [ -x $exec ] || exit 5
     #[ -f $config ] || exit 6
+    # ensure dumppath exists
+    [ -d $dumppath ] || mkdir $dumppath && chown $apacheuser $dumppath
     echo -n $"Starting $prog: "
     # if not running, start it up here, usually something like "daemon $exec"
     daemon python26 $exec $dumppath
