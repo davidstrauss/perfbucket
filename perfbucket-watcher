@@ -25,7 +25,7 @@ exec="/usr/bin/perfbucket watch"
 prog="perfbucket-watcher"
 runuser="apache"
 pid_file="/var/run/perfbucket-watcher.pid"
-pid=`ps ax | grep python26 | grep watcher.py | awk {'print $1'}`
+pid=`ps ax | grep python26 | grep "perfbucket watch" | awk {'print $1'}`
 
 [ -e /etc/sysconfig/$prog ] && . /etc/sysconfig/$prog
 
