@@ -4,4 +4,4 @@ import perfbucket
 import sys
 
 if __name__ == '__main__':
-    monitor(sys.argv[1])
+    perfbucket.watcher.monitor(sys.argv[1])
