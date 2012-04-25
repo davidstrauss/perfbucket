@@ -1,6 +1,6 @@
 <?php
 
-if function_exists('xhprof_disable') {
+if (function_exists('xhprof_disable')) {
   include_once '/usr/share/pear/xhprof_lib/utils/xhprof_lib.php';
   include_once '/usr/share/pear/xhprof_lib/utils/xhprof_runs.php';
   $xhprof_data = xhprof_disable();
