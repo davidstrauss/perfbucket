@@ -75,14 +75,16 @@ def save_profiling_result(data, metadata):
     data_cf = pycassa.ColumnFamily(pool, "profiling_data")
     metadata_cf = pycassa.ColumnFamily(pool, "profiling_metadata")
     worst_cf = pycassa.ColumnFamily(pool, "profiling_worst_by_hour")
+    
+    one_week = 86400*7
 
     uuids = get_time_uuids()
-    data_cf.insert(uuids["unique"], _jsonify(data))
-    metadata_cf.insert(uuids["unique"], _jsonify(metadata))
+    data_cf.insert(uuids["unique"], _jsonify(data), ttl=one_week)
+    metadata_cf.insert(uuids["unique"], _jsonify(metadata), ttl=one_week)
 
     duration = get_duration_from_data(data)
     value = {"request_uuid": str(uuids["unique"]),
              "page": get_page_from_metadata(metadata),
              "duration": duration}
     worst_data = {(duration, str(uuids["unique"])): value}
-    worst_cf.insert(uuids["hour"], _jsonify(worst_data))
+    worst_cf.insert(uuids["hour"], _jsonify(worst_data), ttl=one_week)

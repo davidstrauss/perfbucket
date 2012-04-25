@@ -5,13 +5,13 @@ import datetime
 
 def print_hour(timestamp):
     rounded_to_hour = int(timestamp / 60 / 60) * 60 * 60
-    print(datetime.datetime.utcfromtimestamp(rounded_to_hour).isoformat())  
+    print(datetime.datetime.utcfromtimestamp(rounded_to_hour).isoformat())
 
 # All paths slower than "N" (5000 milliseconds)
 
 def slowest_requests_by_hour(begin=None, hours=24):
     print("Slowest Requests by Hour")
-  
+
     if begin is None:
         begin = time.time()
     for hours_ago in range(0, hours):
@@ -26,7 +26,7 @@ def slowest_requests_by_hour(begin=None, hours=24):
 
 # Top 20 slowest by average wall time (weighted by popularity?)
 
-def _slowest_pages_on_average_for_hour(timestamp, top=50):
+def _slowest_pages_on_average_for_hour(timestamp, top, min_count):
     pages = {}
     results = storage.get_worst(timestamp, max_count=10000)
     for name, value in results.iteritems():
@@ -35,10 +35,11 @@ def _slowest_pages_on_average_for_hour(timestamp, top=50):
         pages[value["page"]] = {"count": current["count"] + 1,
                                 "duration": current["count"] + value["duration"],
                                 "requests": current["requests"]}
-                                    
+
     ordered_pages = {}
     for page, data in pages.iteritems():
-        ordered_pages[(data["duration"], page)] = data
+        if data["count"] >= min_count:
+            ordered_pages[(data["duration"], page)] = data
 
     displayed = 0
     for key in reversed(sorted(ordered_pages.keys())):
@@ -48,26 +49,26 @@ def _slowest_pages_on_average_for_hour(timestamp, top=50):
         print("    Count: {0}".format(value["count"]))
         print("    Average duration: {0} milliseconds".format(average_duration / 1000))
         print("    Worst requests (showing up to ten):")
-        
+
         requests_displayed = 0
         for duration in reversed(sorted(value["requests"].keys())):
             print("      {0}".format(value["requests"][duration]))
             requests_displayed += 1
             if requests_displayed == 10:
                 break
-        
+
         displayed += 1
         if displayed == top:
             break
 
-def slowest_pages_on_average_by_hour(begin=None, hours=24, top=50):
+def slowest_pages_on_average_by_hour(begin=None, hours=24, top=50, min_count=2):
     print("Slowest Pages on Average by Hour")
     if begin is None:
         begin = time.time()
     for hours_ago in range(0, hours):
         timestamp = begin - hours_ago * 60 * 60
         print_hour(timestamp)
-        _slowest_pages_on_average_for_hour(timestamp, top)
+        _slowest_pages_on_average_for_hour(timestamp, top, min_count)
 
 if __name__ == '__main__':
     slowest_requests_by_hour()
