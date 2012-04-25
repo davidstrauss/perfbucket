@@ -1,0 +1,7 @@
+#!/usr/bin/env python
+
+import perfbucket
+import sys
+
+if __name__ == '__main__':
+    monitor(sys.argv[1])
