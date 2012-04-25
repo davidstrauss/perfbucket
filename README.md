@@ -31,6 +31,7 @@
         yum install -y apache-cassandra1 python-pip gcc python-devel git
         pip-python install git+http://github.com/davidstrauss/perfbucket.git#egg=perfbucket
         systemctl enable cassandra.service perfbucket-watcher.service
+        systemctl start cassandra.service perfbucket-watcher.service
 
 1. Set up the PHP side:
 
@@ -38,9 +39,4 @@
         pecl install channel://pecl.php.net/xhprof-0.9.2
         echo "extension=xhprof.so" > /etc/php.d/xhprof.ini
         systemctl enable httpd.service mysqld.service
-
-1. Ensure all the updates take effect:
-
-        reboot
-
-## Using with Drupal
+        systemctl start httpd.service mysqld.service
