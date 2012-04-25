@@ -44,3 +44,25 @@
         systemctl start httpd.service mysqld.service
 
 1. Use the files in the "php" directory as a guide for having all PHP runs send profiling information to perfbucket.
+
+## Usage
+
+* Enable watching of a directory for xhprof/json files:
+
+        perfbucket watch <directory>
+
+* View the slowest requests by hour:
+
+        perfbucket show requests
+
+* View the slowest average pages by hour:
+
+        perfbucket show pages
+
+* Output the xhprof-compatible profiling data into a file:
+
+        perfbucket export <request-uuid> > profile.xhprof_testing
+
+* Install the Cassandra schema:
+
+        perfbucket init
