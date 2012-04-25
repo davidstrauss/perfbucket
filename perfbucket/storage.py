@@ -35,7 +35,7 @@ def get_time_uuids(now=None):
     
     return result
     
-def get_worst(timestamp, minimum=5000000, max_count=100):
+def get_worst(timestamp, minimum=1000000, max_count=100):
     pool = _get_cassandra_connection()
     data_cf = pycassa.ColumnFamily(pool, "profiling_data")
     metadata_cf = pycassa.ColumnFamily(pool, "profiling_metadata")
@@ -65,7 +65,7 @@ def get_profiling_details(request_uuid):
     return {"data": data, "metadata": metadata}
 
 def get_page_from_metadata(metadata):
-    return "{0}?{1}".format(metadata["SERVER"]["SCRIPT_NAME"], metadata["SERVER"]["QUERY_STRING"])
+    return "{0}{1}?{2}".format(metadata["SERVER"].get("HTTP_HOST", "unknown"), metadata["SERVER"]["SCRIPT_NAME"], metadata["SERVER"]["QUERY_STRING"])
 
 def get_duration_from_data(data):
     return int(data["main()"]["wt"])
