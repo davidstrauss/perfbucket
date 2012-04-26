@@ -49,7 +49,7 @@ stop() {
     [[ $pid != "" ]] && success && kill $pid || failure
     retval=$?
     echo
-    [ $retval -eq 0 ] && rm -f $lockfile
+    [ $retval -eq 0 ] && rm -f $lockfile && rm -f $pid_file
     return $retval
 }
 
