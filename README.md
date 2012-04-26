@@ -1,49 +1,53 @@
 # perfbucket
 
-## Setup on Fedora 16
+## First things first
 
-1. Add the DataStax repository to /etc/yum.repos.d/datastax.repo:
+You need Cassandra running. See the [DataStax Community Edition guide](http://www.datastax.com/docs/1.0/install/install_package#installing-cassandra-rpm-packages). Install apache-cassandra1 (rather than dsc) to only get the open-source Cassandra tools, which are all you need.
 
-        [datastax]
-        name=DataStax Repo for Apache Cassandra
-        baseurl=http://rpm.datastax.com/community
-        enabled=1
-        gpgcheck=0
+## Initial setup on RHEL and CentOS (tested on CentOS 5)
 
-1. Add the perfbucket service to /etc/systemd/system/perfbucket-watcher.service:
+1. Install Python 2.6 and its setuptools:
 
-        [Unit]
-        After=network.target
+        yum install -y python26 python26-distribute python26-setuptools python26-devel git gcc
+        easy_install-2.6 pip
+        easy_install-2.6 -U distribute
+        pip-2.6 install git+http://github.com/davidstrauss/perfbucket.git#egg=perfbucket
+        ln -s /usr/bin/pip-2.6 /usr/bin/pip  # Optional, fixes Puppet PIP support.
 
-        [Service]
-        TimeoutSec=90s
-        User=apache
-        Group=apache
-        ExecStart=/usr/bin/perfbucket-watcher /var/tmp/perfbucket
-        Restart=on-failure
-        RestartSec=5min
+1. Start and enable the Cassandra and perfbucker-watcher services:
 
-        [Install]
-        WantedBy=multi-user.target
+        chkconfig cassandra on
+        chkconfig perfbucket-watcher on
+        /etc/init.d/cassandra start
+        /etc/init.d/perfbucket-watcher start
+
+## Initial setup on Fedora (tested on Fedora 16)
 
 1. Set up the Python side:
 
-        yum install -y apache-cassandra1 python-pip gcc python-devel git
+        yum install -y python-pip gcc python-devel git
         pip-python install git+http://github.com/davidstrauss/perfbucket.git#egg=perfbucket
+        ln -s /usr/bin/pip-python /usr/bin/pip  # Optional, fixes Puppet PIP support.
+
+1. Optional: Copy the bundled perfbucket-watcher.service file into /etc/systemd/system to override the init script.
+1. Start and enable the Cassandra and perfbucker-watcher services:
+
         systemctl enable cassandra.service perfbucket-watcher.service
         systemctl start cassandra.service perfbucket-watcher.service
 
-1. Use schema.py in the installed package to configure Cassandra.
+## Final setup for all Red Hat-style systems
 
-1. Set up the PHP side:
+1. Initialize the perfbucket schema:
 
-        yum install -y httpd mysql mysql-server php php-mysql php-devel php-pear php-pecl-apc
+        perfbucket init
+
+1. Set up the PHP side (or examine the files in the php directory to integrate manually). For now, PHP resources aren't installed by PIP.
+
+        yum install -y httpd php php-devel php-pear gcc
         pecl install channel://pecl.php.net/xhprof-0.9.2
-        echo "extension=xhprof.so" > /etc/php.d/xhprof.ini
-        systemctl enable httpd.service mysqld.service
-        systemctl start httpd.service mysqld.service
-
-1. Use the files in the "php" directory as a guide for having all PHP runs send profiling information to perfbucket.
+        git clone git+http://github.com/davidstrauss/perfbucket.git
+        cd perfbucket/php
+        ./install
 
 ## Usage
 
