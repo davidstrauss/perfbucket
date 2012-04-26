@@ -4,6 +4,7 @@ import time
 import datetime
 
 def print_hour(timestamp):
+    print("")
     rounded_to_hour = int(timestamp / 60 / 60) * 60 * 60
     print(datetime.datetime.utcfromtimestamp(rounded_to_hour).isoformat())
 
