@@ -60,7 +60,7 @@ def get_profiling_details(request_uuid):
     metadata_cf = pycassa.ColumnFamily(pool, "profiling_metadata")
     
     data = dict(_unjsonify(data_cf.get(request_uuid, column_count=10000)))
-    metadata = dict(_unjsonify(metadata_cf.get(request_uuid, column_count=10000))))
+    metadata = dict(_unjsonify(metadata_cf.get(request_uuid, column_count=10000)))
     
     return {"data": data, "metadata": metadata}
 
