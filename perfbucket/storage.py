@@ -65,7 +65,13 @@ def get_profiling_details(request_uuid):
     return {"data": data, "metadata": metadata}
 
 def get_page_from_metadata(metadata):
-    return "{0}{1}?{2}".format(metadata["SERVER"].get("HTTP_HOST", "unknown"), metadata["SERVER"]["SCRIPT_NAME"], metadata["SERVER"]["QUERY_STRING"])
+    page = "{0}{1}".format(metadata["SERVER"].get("HTTP_HOST", "unknown"), metadata["SERVER"]["SCRIPT_NAME"])
+
+    q = metadata["SERVER"]["QUERY_STRING"]
+    if q != "":
+        page += "?{0}".format(q)
+
+    return page
 
 def get_duration_from_data(data):
     return int(data["main()"]["wt"])
