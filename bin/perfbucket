@@ -9,7 +9,7 @@ if __name__ == '__main__':
         path = sys.argv[2]
         watcher.monitor(path)
     elif verb == "export":
-        request_uuid = sys.argv[2]
+        request_uuid = uuid.UUID(sys.argv[2])
         print(export_for_xhprof.get_xhprof_data(request_uuid))
     elif verb == "init":
         schema.install(storage.KEYSPACE, drop_first=True)
