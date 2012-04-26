@@ -1,0 +1,13 @@
+[Unit]
+After=network.target
+
+[Service]
+TimeoutSec=90s
+User=apache
+Group=apache
+ExecStart=/usr/bin/perfbucket watch /var/tmp/perfbucket
+Restart=on-failure
+RestartSec=5min
+
+[Install]
+WantedBy=multi-user.target
