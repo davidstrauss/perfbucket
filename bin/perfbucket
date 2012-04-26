@@ -15,7 +15,10 @@ if __name__ == '__main__':
         schema.install(storage.KEYSPACE, drop_first=True)
     elif verb == "show":
         topic = sys.argv[2]
+        if topic == "verbose":
+            verbose = True
+            topic = sys.argv[3]
         if topic == "requests":
-            reporting.slowest_requests_by_hour()
+            reporting.slowest_requests_by_hour(verbose=verbose)
         elif topic == "pages":
-            reporting.slowest_pages_on_average_by_hour()
+            reporting.slowest_pages_on_average_by_hour(verbose=verbose)
