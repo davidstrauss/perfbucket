@@ -20,7 +20,7 @@ def slowest_requests_by_hour(begin=None, hours=24, verbose=False):
         results = storage.get_worst(timestamp)
         if len(results) > 0:
             print_hour(timestamp)
-            for name, value in results.iteritems():
+            for name, value in iter(sorted(results.iteritems(), reverse=True)):
                 request_uuid = value["request_uuid"]
                 print("  Request UUID: %s" % request_uuid)
                 print("    Duration: {0} milliseconds".format(value["duration"] / 1000))
