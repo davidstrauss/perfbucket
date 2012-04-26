@@ -27,7 +27,7 @@ def slowest_requests_by_hour(begin=None, hours=24, verbose=False):
 
 # Top 20 slowest by average wall time (weighted by popularity?)
 
-def _slowest_pages_on_average_for_hour(timestamp, top, min_count):
+def _slowest_pages_on_average_for_hour(timestamp, top, min_count, verbose):
     pages = {}
     results = storage.get_worst(timestamp, max_count=10000)
     if len(results) == 0:
@@ -72,7 +72,7 @@ def slowest_pages_on_average_by_hour(begin=None, hours=24, top=50, min_count=2, 
         begin = time.time()
     for hours_ago in range(0, hours):
         timestamp = begin - hours_ago * 60 * 60
-        _slowest_pages_on_average_for_hour(timestamp, top, min_count)
+        _slowest_pages_on_average_for_hour(timestamp, top, min_count, verbose)
 
 if __name__ == '__main__':
     slowest_requests_by_hour()
