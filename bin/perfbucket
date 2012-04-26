@@ -2,6 +2,7 @@
 
 from perfbucket import watcher, schema, export_for_xhprof, reporting, storage
 import sys
+import uuid
 
 if __name__ == '__main__':
     verb = sys.argv[1]
