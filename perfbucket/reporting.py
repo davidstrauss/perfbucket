@@ -30,9 +30,6 @@ def slowest_requests_by_hour(begin=None, hours=24, verbose=False):
 def _slowest_pages_on_average_for_hour(timestamp, top, min_count, verbose):
     pages = {}
     results = storage.get_worst(timestamp, max_count=10000)
-    if len(results) == 0:
-        return
-    print_hour(timestamp)
     for name, value in results.iteritems():
         current = pages.get(value["page"], {"count": 0, "duration": 0, "requests": {}})
         current["requests"][value["duration"]] = str(value["request_uuid"])
@@ -44,6 +41,10 @@ def _slowest_pages_on_average_for_hour(timestamp, top, min_count, verbose):
     for page, data in pages.iteritems():
         if data["count"] >= min_count:
             ordered_pages[(data["duration"], page)] = data
+
+    if len(ordered_pages) == 0:
+        return
+    print_hour(timestamp)
 
     displayed = 0
     for key in reversed(sorted(ordered_pages.keys())):
