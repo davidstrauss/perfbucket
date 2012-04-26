@@ -49,19 +49,19 @@
 
 * Enable watching of a directory for xhprof/json files:
 
-        perfbucket watch <directory>
+        perfbucket watch DIRECTORY
 
 * View the slowest requests by hour:
 
-        perfbucket show requests
+        perfbucket show <verbose> requests
 
 * View the slowest average pages by hour:
 
-        perfbucket show pages
+        perfbucket show <verbose> pages
 
 * Output the xhprof-compatible profiling data into a file:
 
-        perfbucket export <request-uuid> > profile.xhprof_testing
+        perfbucket export REQUEST-UUID > profile.xhprof_testing
 
 * Install the Cassandra schema:
 
